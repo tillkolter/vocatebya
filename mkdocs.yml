@@ -1,0 +1,11 @@
+site_name: vocatebya
+site_description: An app to support my wife learning German
+repo_url: https://github.com/tillkolter/vocatebya
+site_dir: site
+copyright: Copyright &copy; 2015, <a href="https://github.com/tillkolter">tillkolter</a>.
+
+pages:
+  - Home: 'index.md'
+  - API:
+    - Authentication: 'api/authentication.md'
+    - Users: 'api/users.md'
