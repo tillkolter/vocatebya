@@ -19,7 +19,7 @@ class VocableStatsSerializer(serializers.ModelSerializer):
 class VocableSerializer(serializers.ModelSerializer):
 
     word = WordSerializer()
-    stats = VocableStatsSerializer(source='vocablestats')
+    stats = VocableStatsSerializer(read_only=True, source='vocablestats')
 
     class Meta:
         model = Vocable
@@ -72,4 +72,4 @@ class VocableSerializer(serializers.ModelSerializer):
                 raise VocableExistsError
             return vocable
         else:
-            raise ParseError
+                raise ParseError
