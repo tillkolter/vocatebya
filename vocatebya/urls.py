@@ -6,12 +6,14 @@ from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic.base import RedirectView
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 
 from users.views import UserViewSet
+from vocables.views import VocableViewSet
 
-router = DefaultRouter()
+router = SimpleRouter(trailing_slash=False)
 router.register(r'users', UserViewSet)
+router.register(r'vocable', VocableViewSet, base_name='vocable')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

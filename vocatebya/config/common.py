@@ -1,3 +1,4 @@
+import datetime
 import os
 from os.path import join
 
@@ -15,6 +16,7 @@ class Common(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
+        'django.contrib.postgres',
 
 
         # Third party apps
@@ -25,7 +27,9 @@ class Common(Configuration):
 
         # Your apps
         'authentication',
-        'users'
+        'users',
+        'words',
+        'vocables',
 
     )
 
@@ -37,7 +41,7 @@ class Common(Configuration):
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
-        'django.middleware.security.SecurityMiddleware'
+        'django.middleware.security.SecurityMiddleware',
     )
 
     ROOT_URLCONF = 'urls'
@@ -209,6 +213,7 @@ class Common(Configuration):
             'rest_framework.permissions.IsAuthenticated',
         ],
         'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
             'rest_framework.authentication.SessionAuthentication',
             'rest_framework.authentication.TokenAuthentication',
         )
@@ -232,3 +237,7 @@ class Common(Configuration):
     # admin template so it may interfere with other apps that modify the
     # default admin template. If you're using such an app, simply remove this.
     RQ_SHOW_ADMIN_LINK = True
+
+    JWT_AUTH = {
+        'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=60 * 60)
+    }
