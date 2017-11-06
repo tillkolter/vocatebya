@@ -32,3 +32,5 @@ django-rq==0.9.6
 
 # Time zones support
 pytz==2017.2
+
+django-cors-headers==2.1.0

@@ -24,6 +24,7 @@ class Common(Configuration):
         'rest_framework.authtoken',  # token authentication
         'django_rq',                 # asynchronous queuing
         'versatileimagefield',       # image manipulation
+        'corsheaders',
 
         # Your apps
         'authentication',
@@ -36,6 +37,7 @@ class Common(Configuration):
     # https://docs.djangoproject.com/en/1.10/topics/http/middleware/
     MIDDLEWARE = (
         'django.contrib.sessions.middleware.SessionMiddleware',
+        'corsheaders.middleware.CorsMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -239,5 +241,12 @@ class Common(Configuration):
     RQ_SHOW_ADMIN_LINK = True
 
     JWT_AUTH = {
-        'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=60 * 60)
+        'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=60 * 60 * 12)
     }
+
+    CORS_ORIGIN_WHITELIST = (
+        'google.com',
+        'localhost:8000',
+        '127.0.0.1:9000',
+        'localhost:4000'
+    )

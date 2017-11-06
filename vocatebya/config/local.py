@@ -19,7 +19,7 @@ class Local(Common):
         BASE_DIR,
         '-s',
         '--nologcapture',
-        '--with-coverage',
+        # '--with-coverage',
         '--with-progressive',
         '--cover-package={}'.format(BASE_DIR)
     ]
