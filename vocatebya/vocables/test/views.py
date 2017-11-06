@@ -40,22 +40,20 @@ class ViewsTest(VocableTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_update_vocable(self):
-        vocable = self._create_vocable()
+        vocable = self._create_vocable('Liebe')
         url = reverse('vocable-detail', args=(vocable.pk,))
 
         data = {
             'word': {
                 'word': 'Liebe',
-                'features': '',
-                'type': 1
             },
             'translation': "любо́вь"
         }
 
         self.client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
-        self.client.post(url, data, format='json')
+        self.client.patch(url, data, format='json')
 
-        old_word = vocable.word.word
+        old_translation = vocable.translation
         vocable = Vocable.objects.get(pk=vocable.pk)
-        self.assertNotEquals(old_word, vocable.word.word)
-        self.assertEquals('Liebe', vocable.word.word)
+        self.assertNotEquals(old_translation, vocable.translation)
+        self.assertEquals('любо́вь', vocable.translation)
