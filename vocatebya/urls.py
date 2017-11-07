@@ -10,10 +10,12 @@ from rest_framework.routers import SimpleRouter
 
 from users.views import UserViewSet
 from vocables.views import VocableViewSet
+from words.views import WordViewSet
 
 router = SimpleRouter(trailing_slash=False)
 router.register(r'users', UserViewSet)
 router.register(r'vocable', VocableViewSet, base_name='vocable')
+router.register(r'word', WordViewSet, base_name='word')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
