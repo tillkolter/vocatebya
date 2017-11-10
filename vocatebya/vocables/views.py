@@ -1,3 +1,4 @@
+from attrdict import AttrDict
 from rest_framework import viewsets
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.exceptions import ValidationError
@@ -33,20 +34,26 @@ class VocableViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['post'], url_path='solve')
     def solve(self, request, pk):
         vocable = self.get_object()
+
         data = request.data
+        result_dict = {}
         if data:
+            serializer = self.get_serializer(vocable)
             solved = True
+            vocable_data = AttrDict(serializer.data)
             for k, v in data.items():
-                word = vocable.word
-                if getattr(word, k) != v:
+                if getattr(vocable_data, k) != v:
                     solved = False
                     break
 
             vocable.vocablestats.increment_tries()
             if solved:
                 vocable.vocablestats.increment_solved()
+                result_dict['status'] = 'solved'
+                result_dict['vocable'] = vocable_data
             else:
-                raise ValidationError('Vocable does not match.')
+                result_dict['status'] = 'failed'
+        else:
+            raise ValidationError('Payload must not be empty')
 
-        serializer = self.get_serializer(vocable)
-        return Response(serializer.data)
+        return Response(result_dict)
