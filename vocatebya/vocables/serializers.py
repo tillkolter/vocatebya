@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
 from vocables.exceptions import VocableExistsError
-from vocables.models import Vocable, VocableStats
+from vocables.models import Vocable, VocableStats, VocableTest, TestVocable
 from words.models import Word
 from words.serializers import WordSerializer
 
@@ -73,3 +73,23 @@ class VocableSerializer(serializers.ModelSerializer):
             return vocable
         else:
                 raise ParseError
+
+
+class TestVocableSerializer(serializers.ModelSerializer):
+
+    position = serializers.IntegerField(read_only=True)
+    vocable = VocableSerializer(read_only=True)
+
+    class Meta:
+        model = TestVocable
+        fields = ('id', 'position', 'test', 'vocable', )
+
+
+class VocableTestSerializer(serializers.ModelSerializer):
+
+    vocables = TestVocableSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = VocableTest
+        fields = ('id', 'vocables', )
+

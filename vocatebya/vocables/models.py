@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 from words.models import Word
@@ -5,7 +6,19 @@ from words.models import Word
 __author__ = 'tkolter'
 
 
+User = get_user_model()
+
+class VocableManager(models.Manager):
+
+    def next_vocable(self, pk):
+        vocable = Vocable.objects.get(vocable__pk=pk)
+        vocable.increment_seen()
+        return vocable
+
+
 class Vocable(models.Model):
+
+    objects = VocableManager()
 
     word = models.ForeignKey(Word)
     translation = models.CharField(max_length=32)
@@ -37,3 +50,43 @@ class VocableStats(models.Model):
     @property
     def solved(self):
         return self.correct_count
+
+
+class TimeStampsMixin:
+
+    created_at = models.DateTimeField(auto_created=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class VocableTest(TimeStampsMixin, models.Model):
+    pass
+
+
+class VocableTestStats(models.Model):
+
+    user = models.ForeignKey(User, related_name='tests')
+    test = models.ForeignKey(VocableTest, related_name='stats')
+
+    started_at = models.DateTimeField(null=True)
+    finished_at = models.DateTimeField(null=True)
+    is_solved = models.BooleanField(default=False)
+
+    # @property
+    # def position(self):
+    #     self.Vocable
+
+
+class TestVocable(models.Model):
+
+    test = models.ForeignKey(VocableTest, related_name='vocables')
+    vocable = models.ForeignKey(Vocable, related_name='tests')
+    position = models.IntegerField()
+
+    class Meta:
+        index_together = ('test', 'position', 'vocable')
+
+
+class VocableTestAnswer(TimeStampsMixin, models.Model):
+
+    user = models.ForeignKey(User)
+    vocable = models.ForeignKey(TestVocable)
