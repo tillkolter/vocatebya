@@ -14,8 +14,10 @@ class TranslationView(viewsets.ViewSet):
     def list(self, request):
         translate = YandexDictionary(settings.YANDEX_DICTIONARY_API_KEY)
         text = request.query_params.get('text')
-        lang = request.query_params.get('lang', 'de-ru')
-        translation = json.loads(translate.lookup(text, 'de', 'ru'))
+        source_lang = request.query_params.get('source', 'de')
+        target_lang = request.query_params.get('target', 're')
+        lookup_str = translate.lookup(text, source_lang, target_lang)
+        translation = json.loads(lookup_str)
         definitions = translation.pop('def')
         if definitions:
             results = []
