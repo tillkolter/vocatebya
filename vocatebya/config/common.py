@@ -241,7 +241,8 @@ class Common(Configuration):
     RQ_SHOW_ADMIN_LINK = True
 
     JWT_AUTH = {
-        'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=60 * 60 * 12)
+        'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=60 * 60 * 12),
+        'JWT_VERIFY_EXPIRATION': not DEBUG
     }
 
     CORS_ORIGIN_WHITELIST = (
@@ -250,3 +251,6 @@ class Common(Configuration):
         '127.0.0.1:9000',
         'localhost:4000'
     )
+
+    YANDEX_TRANSLATE_API_KEY = os.getenv('YANDEX_TRANSLATE_API_KEY')
+    YANDEX_DICTIONARY_API_KEY = os.getenv('YANDEX_DICTIONARY_API_KEY')

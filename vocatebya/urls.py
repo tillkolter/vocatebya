@@ -8,6 +8,7 @@ from django.contrib import admin
 from django.views.generic.base import RedirectView
 from rest_framework.routers import SimpleRouter
 
+from translation.views import TranslationView
 from users.views import UserViewSet
 from vocables.views import VocableViewSet, VocableTestViewSet, VocableAnswerView
 from words.views import WordViewSet
@@ -18,6 +19,7 @@ router.register(r'vocable', VocableViewSet, base_name='vocable')
 router.register(r'word', WordViewSet, base_name='word')
 router.register(r'vocable-test', VocableTestViewSet, base_name='vocable_test')
 router.register(r'vocable-answer', VocableAnswerView, base_name='vocable_answer')
+router.register(r'translate', TranslationView, base_name='translate')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
