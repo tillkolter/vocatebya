@@ -1,8 +1,9 @@
 from rest_framework import serializers
-from rest_framework.exceptions import ParseError
+from rest_framework.exceptions import ParseError, ValidationError
 
 from vocables.exceptions import VocableExistsError
-from vocables.models import Vocable, VocableStats, VocableTest, TestVocable
+from vocables.models import Vocable, VocableStats, VocableTest, TestVocable, \
+    VocableTestAnswer
 from words.models import Word
 from words.serializers import WordSerializer
 
@@ -87,9 +88,37 @@ class TestVocableSerializer(serializers.ModelSerializer):
 
 class VocableTestSerializer(serializers.ModelSerializer):
 
-    vocables = TestVocableSerializer(many=True, read_only=True)
+    next_vocable = serializers.SerializerMethodField()
+    count = serializers.SerializerMethodField()
 
     class Meta:
         model = VocableTest
-        fields = ('id', 'vocables', )
+        fields = ('id', 'next_vocable', 'count', )
 
+    def get_next_vocable(self, instance):
+        qs = TestVocable.objects.filter(test=instance, answers=None)
+        qs = qs.order_by('position')
+
+        if qs:
+            return TestVocableSerializer(qs[0]).data
+
+    def get_count(self, instance):
+        return TestVocable.objects.filter(test=instance).count()
+
+
+class VocableAnswerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = VocableTestAnswer
+        fields = ('vocable', )
+    #
+    # def validate_user(self, value):
+    #     user = self.context['request'].user
+    #     if user.is_authenticated:
+    #         return user.pk
+
+    # def validate_vocable(self, pk):
+    #     try:
+    #         return TestVocable.objects.get(pk=pk)
+    #     except TestVocable.DoesNotExist:
+    #         raise ValidationError('Test vocable does not exist')

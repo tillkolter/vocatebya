@@ -9,13 +9,15 @@ from django.views.generic.base import RedirectView
 from rest_framework.routers import SimpleRouter
 
 from users.views import UserViewSet
-from vocables.views import VocableViewSet
+from vocables.views import VocableViewSet, VocableTestViewSet, VocableAnswerView
 from words.views import WordViewSet
 
 router = SimpleRouter(trailing_slash=False)
 router.register(r'users', UserViewSet)
 router.register(r'vocable', VocableViewSet, base_name='vocable')
 router.register(r'word', WordViewSet, base_name='word')
+router.register(r'vocable-test', VocableTestViewSet, base_name='vocable_test')
+router.register(r'vocable-answer', VocableAnswerView, base_name='vocable_answer')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

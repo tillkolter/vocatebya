@@ -26,7 +26,8 @@ class Vocable(models.Model):
 
 class VocableStats(models.Model):
 
-    vocable = models.OneToOneField(Vocable)
+    user = models.ForeignKey(User)
+    vocable = models.ForeignKey(Vocable, related_name='stats')
 
     seen_count = models.IntegerField(default=0)
     correct_count = models.IntegerField(default=0)
@@ -88,5 +89,8 @@ class TestVocable(models.Model):
 
 class VocableTestAnswer(TimeStampsMixin, models.Model):
 
-    user = models.ForeignKey(User)
-    vocable = models.ForeignKey(TestVocable)
+    user = models.ForeignKey(User, related_name='answers')
+    vocable = models.ForeignKey(TestVocable, related_name='answers')
+
+    solution = models.TextField()
+    is_correct = models.BooleanField(default=False)
