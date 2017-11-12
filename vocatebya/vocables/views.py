@@ -2,6 +2,7 @@ import json
 import random
 
 from attrdict import AttrDict
+from django.utils import timezone
 from rest_framework import viewsets, views
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.exceptions import ValidationError
@@ -84,18 +85,18 @@ class VocableTestViewSet(viewsets.ModelViewSet):
     @list_route(methods=['post'], url_path='next')
     def next(self, request):
         user = request.user
-        qs = self.get_queryset()
+        qs = self.get_queryset().filter(user=user)
         unfinished_tests = (
             qs
-            .filter(stats__user=user, stats__finished_at=None)
-            .order_by('stats__started_at')
+            .filter(finished_at=None)
+            .order_by('started_at')
         )
         if unfinished_tests:
             next_test = unfinished_tests[0]
         elif qs:
             next_test = qs[0]
         else:
-            next_test = generate_test()
+            next_test = generate_test(request.user)
 
         serializer = self.get_serializer(next_test)
         return Response(serializer.data)
@@ -166,6 +167,14 @@ class VocableAnswerView(CreateModelMixin, viewsets.GenericViewSet):
                 result_dict['vocable'] = vocable_data
             else:
                 result_dict['status'] = 'failed'
+            vocable_test = test_vocable.test
+            test_vocables = TestVocable.objects.filter(test=vocable_test)
+            test_size = test_vocables.count()
+            if test_vocable.position == test_size - 1:
+                stats = vocable_test.stats
+                stats.finished_at = timezone.now()
+                stats.save(update_fields=['finished_at'])
+
         else:
             raise ValidationError('Payload must not be empty')
 

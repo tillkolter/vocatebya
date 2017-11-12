@@ -37,4 +37,4 @@ django-cors-headers==2.1.0
 
 attrdict==2.0.0
 
--e git+git://github.com/kz20/python-yandex-dictionary#egg=yandex_dictionary
+-e git+https://github.com/tillkolter/python-yandex-dictionary#egg=yandex_dictionary

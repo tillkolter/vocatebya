@@ -8,6 +8,7 @@ __author__ = 'tkolter'
 
 User = get_user_model()
 
+
 class VocableManager(models.Manager):
 
     def next_vocable(self, pk):
@@ -60,21 +61,11 @@ class TimeStampsMixin:
 
 
 class VocableTest(TimeStampsMixin, models.Model):
-    pass
-
-
-class VocableTestStats(models.Model):
-
     user = models.ForeignKey(User, related_name='tests')
-    test = models.ForeignKey(VocableTest, related_name='stats')
 
     started_at = models.DateTimeField(null=True)
     finished_at = models.DateTimeField(null=True)
     is_solved = models.BooleanField(default=False)
-
-    # @property
-    # def position(self):
-    #     self.Vocable
 
 
 class TestVocable(models.Model):
